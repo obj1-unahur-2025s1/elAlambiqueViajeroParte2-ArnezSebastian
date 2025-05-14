@@ -1,4 +1,5 @@
 import elAlambiqueViajero.*
+
 test "luke cuenta cuando va de viaje"{
     luke.viajar(paris)
     assert.equals(1, luke.cantidadViajes())
@@ -61,4 +62,198 @@ test "luke viaja a hurlingham en el convertible convertido en chatarra" {
   assert.equals("sticker de la Unahur",luke.recuerdo())
   assert.equals(5,chatarra.cañones())
 
+}
+/*
+test "al añadir un vehiculo nuevo a la lista de pendientes a inscribir, se verifica luego su inscripción" {
+    centroDeInscripcion.añadirVehiculo(alambiqueVeloz)
+    centroDeInscripcion.verificarVehiculos()
+    assert.equals(alambiqueVeloz, centroDeInscripcion.vehiculosInscriptos())
+}
+*/
+describe "grupo de tests de la segunda parte del alambique viajero" {
+  test "al inscribirse el alambique 0km, la antigualla y la super chatarra con unos viajes ya realizados a la 
+  carrera en buenos aires, la locación default, el ganador de dicha carrera es el alambique, ya que es el que tiene mayor velocidad 
+  de todos los vehiculos que quedaron inscriptos (es más veloz que la chatarra)." {
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste() //no es veloz
+    chatarra.desgaste() //es veloz, pasa a no serlo luego de recorrer la carrera, pero aún así su pierde en velocidad
+    centroDeInscripcion.verificarVehiculo(alambiqueVeloz)
+    centroDeInscripcion.verificarVehiculo(antigualla)
+    centroDeInscripcion.verificarVehiculo(chatarra)
+    assert.equals(alambiqueVeloz, centroDeInscripcion.identificarGanador())
   }
+  test "al inscribirse el alambique luego de haberse desgastado 2 veces, la antigualla y la super chatarra con 
+unos viajes ya realizados a la carrera en paris, la locación nueva, el ganador de dicha carrera es la chatarra, ya que él es el 
+más veloz de todos los vehiculos inscriptos." {
+    alambiqueVeloz.desgaste()
+    alambiqueVeloz.desgaste() //deja de tener combustible
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste() //no es veloz, pero sigue funcionando
+    centroDeInscripcion.verificarVehiculo(alambiqueVeloz)
+    centroDeInscripcion.verificarVehiculo(antigualla)
+    centroDeInscripcion.verificarVehiculo(chatarra)
+    centroDeInscripcion.cambiarDeSedeA(paris)
+    assert.equals(chatarra, centroDeInscripcion.identificarGanador())
+}
+test "al inscribirse el alambique, la antigualla y el superConvertible convertido en la moto (0km), el convertible omega convertido 
+en la antigualla y la maldad ascendente a la carrera en bagdad, la locación nueva, el ganador de dicha carrera es el alambique, 
+ya que él es el más veloz de todos los vehiculos inscriptos." {
+    convertible.convertir(moto) //velocidad 50
+    convertibleOmega.convertirEnNuevoVehiculo() //antigualla
+    centroDeInscripcion.verificarVehiculo(alambiqueVeloz) // velocidad 100
+    centroDeInscripcion.verificarVehiculo(antigualla) //velocidad 36
+    centroDeInscripcion.verificarVehiculo(convertible)
+    centroDeInscripcion.verificarVehiculo(convertibleOmega) 
+    centroDeInscripcion.cambiarDeSedeA(bagdad)
+    assert.equals(alambiqueVeloz, centroDeInscripcion.identificarGanador())
+}
+test "al inscribirse el alambique, la antigualla y el superConvertible convertido en la moto (0km), el convertible omega convertido 
+en la antigualla y la maldad ascendente a la carrera en las vegas, que hace homenaje a hurlingham, la locación nueva, el ganador 
+de dicha carrera es el alambique, ya que él es el más veloz de todos los vehiculos inscriptos con una patente válida, aunque 
+no sea el más veloz, siendo descalificado la maldad por no tener una patente válida." {
+    lasVegas.homenaje(hurlingham)
+    convertible.convertir(moto) //velocidad 50
+    convertibleOmega.convertirEnNuevoVehiculo() //antigualla
+    centroDeInscripcion.verificarVehiculo(alambiqueVeloz) // velocidad 100
+    centroDeInscripcion.verificarVehiculo(antigualla) //velocidad 36
+    centroDeInscripcion.verificarVehiculo(maldadAscendente) //velocidad 110, luego de la carrera 105
+    centroDeInscripcion.verificarVehiculo(convertible)
+    centroDeInscripcion.verificarVehiculo(convertibleOmega) 
+    centroDeInscripcion.cambiarDeSedeA(lasVegas)
+    assert.equals(alambiqueVeloz, centroDeInscripcion.identificarGanador())
+}
+
+test "al inscribirse la antigualla, la super chatarra y el superConvertible convertido en la moto (0km), el convertible 
+omega convertido en la antigualla y la maldad ascendente a la carrera en las vegas, que hace homenaje a hurlingham, la locación 
+nueva, el ganador de dicha carrera es la chatarra, ya que él es el más veloz de todos los vehiculos inscriptos que cumple con 
+todos los requisitos que la ciudad requiere." {
+    lasVegas.homenaje(hurlingham)
+    convertible.convertir(moto) //velocidad 50
+    convertibleOmega.convertirEnNuevoVehiculo() //antigualla
+    centroDeInscripcion.verificarVehiculo(antigualla) //velocidad 36
+    centroDeInscripcion.verificarVehiculo(chatarra) // velocidad 80
+    centroDeInscripcion.verificarVehiculo(convertible)
+    centroDeInscripcion.verificarVehiculo(convertibleOmega) 
+    centroDeInscripcion.verificarVehiculo(maldadAscendente) //velocidad 110, pero queda descalificado por no tener una patente válida
+    centroDeInscripcion.cambiarDeSedeA(lasVegas)
+    assert.equals(chatarra, centroDeInscripcion.identificarGanador())
+}
+
+test "la maldad ascendente (vehiculo de pierre nodoyuna y patan), tienen combustible a primera instancia." {
+  assert.that(maldadAscendente.tieneCombustible())
+}
+test "la maldad ascendente tiene trampas a primera instancia" {
+    assert.that(maldadAscendente.tieneTrampas())
+}
+test "la maldad ascendente puede funcionar a primera instancia" {
+    assert.that(maldadAscendente.puedeFuncionar())
+}
+test "la velocidad inicial de la maldad ascendente es de 110" {
+    assert.equals(110, maldadAscendente.velocidad())
+}
+test "al desgastarse, la maldad ascendente pierde unos 50 de combustible, dejandolo en 250, así que aún se mantiene con 
+combustible" {
+    maldadAscendente.desgaste()
+    assert.that(maldadAscendente.tieneCombustible()) 
+}
+test "al desgastarse, la maldad ascendente pierde una cantidad de velocidad, basada en la cantidad de letras de la trampa actual." {
+    maldadAscendente.desgaste()
+    assert.equals(105, maldadAscendente.velocidad()) 
+}
+test "al desgastarse 2 veces, la maldad ascendente pierde una cantidad de velocidad basada en la cantidad de letras de la trampa 
+actual, en el primer caso, pierde 5 por la palabra bomba y luego pierde 14, perdiendo 19 en total, dejandolo en 91" {
+    maldadAscendente.desgaste()
+    maldadAscendente.desgaste()
+    assert.equals(91, maldadAscendente.velocidad()) 
+}
+test "al desgastarse más de 3 veces, la maldad ascendente pierde una cantidad de velocidad basada en la cantidad de letras de la 
+trampa actual, hasta que ya no tenga trampas en la misma, en el primer caso, pierde 5 por la palabra bomba, luego 14, y luego 17, 
+perdiendo 36 en total, dejandolo en 74" {
+    maldadAscendente.desgaste()
+    maldadAscendente.desgaste()
+    maldadAscendente.desgaste()
+    maldadAscendente.desgaste()//aqui ya no pierde más, ya que la lista está vacía
+    maldadAscendente.desgaste()//aqui ya no pierde más, ya que la lista está vacía
+    maldadAscendente.desgaste()//aqui ya no pierde más, ya que la lista está vacía
+    assert.equals(74, maldadAscendente.velocidad()) 
+}
+test "la antigualla blindada tiene una velocidad según la cantidad de letras de cada gangster, dando 43 en total."{ 
+    assert.equals(43, antigualla.velocidad())
+}
+test "la antigualla blindada puede funcionar a primera instancia"{ 
+    assert.that(antigualla.puedeFuncionar())
+}
+test "la antigualla blindada es rapida a primera instancia" {
+    assert.that(antigualla.rapido())
+}
+test "la antigualla blindada tiene una patente la cual es válida según la velocidad del mismo vehiculo, simbolizando que va a ser 
+verdadera" {
+    assert.that(antigualla.patenteValida())
+}
+
+test "la antigualla puede subir a más gente antes de la carrera, lo cual hace que su velocidad aumente según la longitud del 
+string" {
+    antigualla.subir("Ariadna")
+    assert.equals(50, antigualla.velocidad())
+}
+test "la antigualla puede bajar a más gente antes de la carrera, lo cual hace que su velocidad disminuya según la longitud del 
+string" {
+    antigualla.bajar("Milei")
+    assert.equals(38, antigualla.velocidad())
+}
+test "la antigualla puede desgastarse, cosa que realiza lo mismo que el anterior test, pero si lo hace varias veces, quedando con 
+la lista vacía, no baja a valores negativos" {
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()
+    antigualla.desgaste()//aqui ya no pierde más, ya que la lista está vacía
+    assert.equals(0, antigualla.velocidad())
+}
+
+test "el convertible omega tiene un vehiculo predeterminado, el cual es el alambique veloz, el cual tiene combustible a 
+primera instancia, lo que simboliza que puede funcionar." {
+    assert.that(convertibleOmega.puedeFuncionar())
+}
+test "el convertible omega tiene un vehiculo predeterminado, el cual es el alambique veloz, el cual es rápido." {
+    assert.that(convertibleOmega.rapido())
+}
+test "el convertible omega tiene un vehiculo predeterminado, el cual es el alambique veloz, el cual tiene una velocidad de 100" {
+    assert.equals(100, convertibleOmega.velocidad())
+}
+test "el convertible omega tiene un vehiculo predeterminado, el cual es el alambique veloz, el cual tiene una patente válida" {
+    assert.that(convertibleOmega.patenteValida())
+}
+test "el convertible omega puede cambiar de vehiculo, haciendo que sus especificaciones cambien, por ejemplo, su velocidad, al 
+cambiar a la antigualla, se convierte en 43." {
+    convertibleOmega.convertirEnNuevoVehiculo()
+    assert.equals(43, convertibleOmega.velocidad())
+}
+test "el convertible omega puede cambiar de vehiculo varias veces, haciendo que sus especificaciones cambien, por ejemplo, su 
+velocidad, al cambiar a la moto, se convierte en 50." {
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    assert.equals(50, convertibleOmega.velocidad())
+}
+test "el convertible omega puede cambiar de vehiculo varias veces, haciendo que sus especificaciones cambien, pero si ya no le 
+quedan vehículos por los cuales cambiar, se queda con el último al cual cambió" {
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo()
+    convertibleOmega.convertirEnNuevoVehiculo() //aqui ya no se modifica más, se queda con la moto
+    convertibleOmega.convertirEnNuevoVehiculo() //aqui ya no se modifica más, se queda con la moto
+    assert.equals(50, convertibleOmega.velocidad())
+}
+}
